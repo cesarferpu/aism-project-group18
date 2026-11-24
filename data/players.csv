@@ -1,0 +1,68 @@
+name,position,age,nationality,club,league,appearances,minutes,goals,assists,height_cm,preferred_foot,contract_until,value_m
+Mateo Silva,ST,23,Spain,Northbridge FC,Iberian League,18,936,18,5,168,Right,2027,18.0
+Daniel Costa,ST,24,Portugal,Atlético del Norte,Portuguese League,25,1350,12,4,179,Left,2028,15.0
+Luca Rossi,ST,21,Italy,Sporting do Vale,Serie A Demo,32,1792,9,6,190,Both,2029,12.0
+Noah Bennett,ST,26,France,Riviera Calcio,Ligue 1 Demo,18,1044,20,3,170,Right,2030,19.0
+Hugo Martins,ST,22,Germany,Royal Arden,Bundesliga Demo,25,1500,14,2,181,Left,2031,22.0
+Ethan Clarke,ST,24,England,Eastborough United,Premier League Demo,32,1984,11,7,192,Both,2027,19.5
+Rafael Sousa,ST,20,Brazil,Porto Azul,Iberian League,18,1152,8,3,172,Right,2028,8.0
+Milan Petrov,ST,25,Argentina,Dynamo Central,Portuguese League,25,1650,16,4,183,Left,2029,17.0
+Theo Laurent,LW,22,Netherlands,Real Montelago,Serie A Demo,32,1664,13,8,194,Both,2030,18.0
+Gabriel Lima,LW,24,Croatia,Olympique du Sud,Ligue 1 Demo,18,972,10,9,174,Right,2031,16.0
+Adam Novak,RW,23,Sweden,Viking Athletic,Bundesliga Demo,25,1400,15,6,185,Left,2027,21.0
+Leo Fischer,RW,21,Morocco,Union Meridian,Premier League Demo,32,1856,11,5,196,Both,2028,14.0
+Marco Bianchi,CM,24,Japan,Northbridge FC,Iberian League,18,1080,6,10,176,Right,2029,17.0
+Samuel Reed,CM,22,Serbia,Atlético del Norte,Portuguese League,25,1550,4,8,187,Left,2030,12.0
+Tiago Alves,DM,25,Spain,Sporting do Vale,Serie A Demo,32,2048,2,5,198,Both,2031,13.0
+Oliver Grant,DM,23,Portugal,Riviera Calcio,Ligue 1 Demo,18,1188,3,7,178,Right,2027,15.0
+Ben Carter,CB,24,Italy,Royal Arden,Bundesliga Demo,25,1300,3,1,189,Left,2028,11.0
+Andre Ferreira,CB,22,France,Eastborough United,Premier League Demo,32,1728,2,2,169,Both,2029,9.0
+Carlos Duarte,GK,25,Germany,Porto Azul,Iberian League,18,1008,0,0,180,Right,2030,8.0
+Julian Weber,ST,22,England,Dynamo Central,Portuguese League,25,1450,17,4,191,Left,2031,16.5
+Santiago Reyes,ST,19,Brazil,Real Montelago,Serie A Demo,32,1920,10,3,171,Both,2027,9.5
+Erik Lund,ST,27,Argentina,Olympique du Sud,Ligue 1 Demo,18,1116,21,5,182,Right,2028,24.0
+Amir Haddad,ST,23,Netherlands,Viking Athletic,Bundesliga Demo,25,1600,13,6,193,Left,2029,14.0
+Bruno Carvalho,ST,21,Croatia,Union Meridian,Premier League Demo,32,2112,7,2,173,Both,2030,7.5
+Felix Meyer,LW,20,Sweden,Northbridge FC,Iberian League,18,936,9,7,184,Right,2031,11.0
+Dario Conti,LW,25,Morocco,Atlético del Norte,Portuguese League,25,1350,12,5,195,Left,2027,17.0
+Luis Romero,LW,23,Japan,Sporting do Vale,Serie A Demo,32,1792,8,10,175,Both,2028,13.5
+Kai Nakamura,RW,22,Serbia,Riviera Calcio,Ligue 1 Demo,18,1044,14,7,186,Right,2029,19.0
+Diego Torres,RW,24,Spain,Royal Arden,Bundesliga Demo,25,1500,12,8,197,Left,2030,18.0
+Marek Zielinski,RW,20,Portugal,Eastborough United,Premier League Demo,32,1984,7,6,177,Both,2031,10.0
+Alex Morgan,CM,23,Italy,Porto Azul,Iberian League,18,1152,5,11,188,Right,2027,16.0
+Nicolas Petit,CM,21,France,Dynamo Central,Portuguese League,25,1650,3,9,168,Left,2028,12.5
+Joao Mendes,CM,26,Germany,Real Montelago,Serie A Demo,32,1664,7,8,179,Both,2029,20.0
+Emil Svensson,CM,20,England,Olympique du Sud,Ligue 1 Demo,18,972,2,6,190,Right,2030,8.5
+Victor Hugo,DM,24,Brazil,Viking Athletic,Bundesliga Demo,25,1400,1,6,170,Left,2031,14.0
+Leon Schmidt,DM,22,Argentina,Union Meridian,Premier League Demo,32,1856,2,4,181,Both,2027,10.0
+Pablo Garcia,DM,27,Netherlands,Northbridge FC,Iberian League,18,1080,3,8,192,Right,2028,18.0
+Ibrahim Diallo,DM,21,Croatia,Atlético del Norte,Portuguese League,25,1550,1,5,172,Left,2029,9.0
+Matteo Ricci,CB,23,Sweden,Sporting do Vale,Serie A Demo,32,2048,2,1,183,Both,2030,12.0
+Oscar Wilson,CB,25,Morocco,Riviera Calcio,Ligue 1 Demo,18,1188,1,3,194,Right,2031,13.0
+Rui Fernandes,CB,20,Japan,Royal Arden,Bundesliga Demo,25,1300,1,0,174,Left,2027,7.0
+Tomas Horak,CB,27,Serbia,Eastborough United,Premier League Demo,32,1728,4,2,185,Both,2028,16.0
+Lars Andersen,CB,22,Spain,Porto Azul,Iberian League,18,1008,0,2,196,Right,2029,8.0
+Youssef Amrani,CB,24,Portugal,Dynamo Central,Portuguese League,25,1450,2,2,176,Left,2030,10.5
+David Klein,GK,22,Italy,Real Montelago,Serie A Demo,32,1920,0,1,187,Both,2031,11.0
+Miguel Santos,GK,27,France,Olympique du Sud,Ligue 1 Demo,18,1116,0,0,198,Right,2027,12.0
+Filip Jovanovic,GK,20,Germany,Viking Athletic,Bundesliga Demo,25,1600,0,0,178,Left,2028,6.5
+Arthur Moreau,GK,24,England,Union Meridian,Premier League Demo,32,2112,0,2,189,Both,2029,14.0
+Enzo Greco,ST,18,Brazil,Northbridge FC,Iberian League,18,936,6,2,169,Right,2030,6.0
+Kieran Murphy,ST,29,Argentina,Atlético del Norte,Portuguese League,25,1350,19,4,180,Left,2031,15.0
+Omar Benali,ST,22,Netherlands,Sporting do Vale,Serie A Demo,32,1792,15,3,191,Both,2027,17.5
+Pedro Nunes,ST,24,Croatia,Riviera Calcio,Ligue 1 Demo,18,1044,10,8,171,Right,2028,16.0
+Stefan Popov,LW,26,Sweden,Royal Arden,Bundesliga Demo,25,1500,11,6,182,Left,2029,15.0
+Rayan El Idrissi,LW,19,Morocco,Eastborough United,Premier League Demo,32,1984,5,5,193,Both,2030,7.0
+Mason Brooks,RW,25,Japan,Porto Azul,Iberian League,18,1152,10,9,173,Right,2031,17.0
+Antoine Leroy,RW,22,Serbia,Dynamo Central,Portuguese League,25,1650,8,7,184,Left,2027,13.0
+Florian Bauer,CM,25,Spain,Real Montelago,Serie A Demo,32,1664,8,12,195,Both,2028,22.0
+Goncalo Ribeiro,CM,19,Portugal,Olympique du Sud,Ligue 1 Demo,18,972,1,4,175,Right,2029,6.0
+Sebastian Costa,CM,27,Italy,Viking Athletic,Bundesliga Demo,25,1400,5,10,186,Left,2030,19.0
+Anders Holm,DM,26,France,Union Meridian,Premier League Demo,32,1856,2,9,197,Both,2031,17.0
+Nuno Tavares,DM,20,Germany,Northbridge FC,Iberian League,18,1080,0,3,177,Right,2027,7.0
+Caleb Johnson,CB,21,England,Atlético del Norte,Portuguese League,25,1550,1,1,188,Left,2028,9.5
+Sergio Molina,CB,29,Brazil,Sporting do Vale,Serie A Demo,32,2048,3,3,168,Both,2029,14.0
+Jan Novak,CB,19,Argentina,Riviera Calcio,Ligue 1 Demo,18,1188,0,1,179,Right,2030,5.5
+Dylan Price,GK,23,Netherlands,Royal Arden,Bundesliga Demo,25,1300,0,0,190,Left,2031,9.0
+Andre Silva,GK,19,Croatia,Eastborough United,Premier League Demo,32,1728,0,0,170,Both,2027,5.0
+Mikael Berg,GK,28,Sweden,Porto Azul,Iberian League,18,1008,0,1,181,Right,2028,10.0
