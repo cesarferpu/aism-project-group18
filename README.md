@@ -1,124 +1,218 @@
-# Football Scouting Assistant — Version 4.4
+# Football Scouting Assistant — Version 4.5
 
-**Course:** Intelligent Agents and Multi-Agent Systems (AISM) — Final Project
-**Group members:** César Fernández Puerma, Óscar David Imbaquingo Yugsi
+**Course:** Intelligent Agents and Multi-Agent Systems (AISM) — Final Project  
+**Group members:** César Fernández Puerma and Óscar David Imbaquingo Yugsi
 
-## What the project does
+## 1. Project overview
 
-A local multi-agent system that helps a football club find transfer targets. The user writes a recruitment request in natural language (for example, *"We are looking for a striker under the age of 25 years, with at least 8 goals and a maximum value of 25 million euros."*). Three LLM agents interpret the request, search a CSV of 67 fictional players and write a ranked top-three report, while a deterministic Python validator enforces every hard requirement. Everything runs locally with Ollama: no paid API and no API key.
+The Football Scouting Assistant is a local multi-agent application that turns a football club's recruitment request, written in natural language, into a shortlist of up to three suitable players. It uses three specialised LLM agents, a CSV dataset of 67 fictional players, and deterministic Python filtering, validation, and ranking. The application runs locally with Ollama and does not require a paid API, account, or API key.
 
-## Multi-agent architecture
+## 2. Multi-agent architecture
 
+```text
+User request
+    |
+    v
+Agent 1 — Club Analyst (LLM)
+    Extracts recruitment requirements as structured JSON
+    |
+    v
+Agent 2 — Player Scout (LLM + Python + CSV)
+    Searches and prioritises players from data/players.csv
+    |
+    v
+Python Validator
+    Independently checks every mandatory requirement
+    |
+    v
+Python canonical ranking
+    Orders all validated candidates deterministically
+    |
+    v
+Agent 3 — Recruitment Advisor (LLM)
+    Explains the already-ranked top three; cannot change the ranking
+    |
+    v
+Final report and candidate table
 ```
-User request -> Agent 1 Club Analyst -> Agent 2 Player Scout -> Python Validator -> Agent 3 Recruitment Advisor -> Report
-                  (LLM, JSON profile)    (LLM + CSV pre-filter)   (plain code)         (LLM, ranked top 3)
-```
 
-1. **Agent 1 — Club Analyst (LLM):** converts the request into a structured JSON profile. Afterwards, Python removes any constraint that cannot be traced to the request text (small models invent filters) and re-reads the explicit wording of age and budget limits.
-2. **Agent 2 — Player Scout (LLM + Python/CSV):** a Python pre-filter applies the hard constraints to `data/players.csv`; the LLM then selects candidates among at most 30 records. Names are checked against the source dataset.
-3. **Python Validator:** independently enforces every mandatory constraint. A player with missing data for a constrained field is rejected.
-4. **Agent 3 — Recruitment Advisor (LLM):** compares only validated players and returns up to three recommendations. Unknown or duplicated names are discarded and ranks are renumbered 1..3 in Python.
+### Agent responsibilities
 
-The three agents share the same local model but have separate roles, prompts, inputs, outputs and log entries. Agents pass structured JSON to each other.
+1. **Agent 1 — Club Analyst:** interprets the user's natural-language request and returns a structured profile. Python checks the extracted constraints against the original request, removes unsupported constraints that the small model may have invented, and applies the explicit wording rules for age and budget.
+2. **Agent 2 — Player Scout:** Python first filters the CSV using the mandatory requirements. The LLM then selects candidate names from the supplied records, and Python checks those names against the source dataset. If the model returns malformed or unusable output, the deterministic pre-filter provides a fallback.
+3. **Python Validator:** independently enforces mandatory constraints before recommendations are produced. A player who fails a mandatory condition, or has missing data for a constrained field, is rejected.
+4. **Agent 3 — Recruitment Advisor:** receives the candidates after Python has established their canonical order. It generates explanations, strengths, and risks using the supplied statistics. It cannot choose, add, remove, or reorder the recommended players. If its explanation is unavailable or invalid, deterministic explanations are used without changing the ranking.
 
-### Strict vs. inclusive limits
+All three agents use the same local model but have separate roles, prompts, inputs, outputs, and log entries. They communicate through a fixed sequential workflow using structured data. Python is authoritative for mandatory constraints and the final ranking.
 
-| Wording | Meaning |
+### Strict and inclusive limits
+
+The application distinguishes strict limits from inclusive limits:
+
+| User wording | Rule applied |
 |---|---|
-| `under 25`, `younger than 25`, `below 25`, `less than 25`, `menor de 25` | age < 25 |
-| `at most 25`, `no older than 25`, `maximum age 25`, `up to 25` | age <= 25 |
-| `budget below €20 million`, `under 20 million`, `less than 20 million` | value < 20 |
-| `maximum value of 20 million`, `budget of 20 million` | value <= 20 |
+| `under 25`, `younger than 25`, `below 25`, `less than 25` | `age < 25` |
+| `at most 25`, `no older than 25`, `maximum age 25`, `up to 25` | `age <= 25` |
+| `budget below €20 million`, `under 20 million`, `less than 20 million` | `value < 20` |
+| `maximum value of 20 million`, `budget of 20 million` | `value <= 20` |
 
-These rules are applied deterministically after the LLM answer, in the Python pre-filter and in the validator. A model response cannot override them.
+These rules are checked in Python. The language model cannot override them.
 
-## Installation
+### Ranking rule
 
-Requirements: Windows 11 (Linux/macOS also work with the equivalent commands), **Python 3.10+**, about 16 GB RAM recommended, [Ollama](https://ollama.com/download). No GPU, account or API key is needed.
+The validated-candidates table and the final report use the same canonical Python ranking:
 
-1. Install Ollama and download the model:
-   ```powershell
-   ollama pull qwen2.5:1.5b
-   ```
-2. In the project folder, create a virtual environment and install the dependencies:
-   ```powershell
-   py -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-   py -m pip install -r requirements.txt
-   ```
-   Alternatively, run `install_windows.bat` once.
+1. Goal contributions per 90 minutes, in descending order.
+2. Minutes played, in descending order, as the secondary criterion.
 
-Optional environment variables: `OLLAMA_URL` (default `http://localhost:11434`) and `OLLAMA_MODEL` (default `qwen2.5:1.5b`). If you ever add secrets, keep them in a `.env` file, which is already in `.gitignore`.
+The application selects up to three players from this ordered list. Agent 3 only writes explanations for those players. If an explanation cannot be generated, the fallback explanation is attached to the same player and the order remains unchanged.
 
-## How to run
+## 3. Dataset
 
-Make sure Ollama is running, then choose one option:
+The project includes `data/players.csv`, a self-contained dataset of **67 fictional players**. It contains 14 fields: player name, position, age, nationality, club, league, appearances, minutes played, goals, assists, height in centimetres, preferred foot, contract end year, and market value in millions of euros.
+
+The records are invented for educational use and do not describe real footballers or the real transfer market. The application derives per-90-minute indicators, including goals, assists, and goal contributions. No external football database or online data API is required.
+
+## 4. Requirements
+
+- Windows 11 (the supplied setup scripts target Windows).
+- Python **3.10 or newer**.
+- Approximately **16 GB RAM recommended** for the selected local model.
+- Ollama installed locally.
+- No dedicated GPU, paid API, account, or API key is required. CPU inference is supported, although responses may take longer.
+
+Python dependencies and their supported version ranges are listed in `requirements.txt`:
+
+- `pandas` — CSV loading and data processing.
+- `streamlit` — web interface.
+- `requests` — communication with the local Ollama service.
+- `json-repair` — recovery from malformed JSON responses.
+
+## 5. Installation
+
+### Step 1 — Install Ollama and download the model
+
+Install Ollama for Windows from [ollama.com/download](https://ollama.com/download). Open PowerShell and download the model used by the project:
 
 ```powershell
-# Web interface (Streamlit)
-py -m streamlit run app.py        # or run_app.bat
+ollama pull qwen2.5:1.5b
+```
 
-# Command line (runs the default example request)
+Ollama normally runs as a Windows background application. If it is not running, start it from the Start menu. Check that the model is available with:
+
+```powershell
+ollama list
+```
+
+### Step 2 — Create the Python environment and install dependencies
+
+Open PowerShell in the project directory (the directory containing `requirements.txt`) and run:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+py -m pip install --upgrade pip
+py -m pip install -r requirements.txt
+```
+
+Alternatively, run `install_windows.bat` from the project directory. If PowerShell blocks script activation, use Command Prompt and run:
+
+```cmd
+.venv\Scripts\activate.bat
+```
+
+## 6. How to run
+
+Make sure Ollama is running and that `qwen2.5:1.5b` has been downloaded. From the project directory, activate the virtual environment and choose one of the following commands.
+
+### Web application (recommended)
+
+```powershell
+py -m streamlit run app.py
+```
+
+The application opens at `http://localhost:8501`. Alternatively, run `run_app.bat` after completing installation.
+
+### Command-line application
+
+```powershell
 py main.py
+```
 
-# Regression tests (no Ollama needed: the LLM is mocked)
+This runs the default example recruitment request and prints the extracted profile, candidate information, and final report in the terminal.
+
+### Automated tests
+
+```powershell
 py -m unittest discover -s tests -v
 ```
 
-On CPU the first response can take several minutes while the model loads.
+The regression tests use a mocked LLM where appropriate, so they do not require Ollama to be running. The test suite contains **17 tests** covering strict and inclusive age and budget limits, unsupported constraints, malformed or incomplete model output, no-result requests, and ranking consistency.
 
-## Expected output
+## 7. Expected output
 
-**Streamlit** (opens at `http://localhost:8501`) shows, in order:
-1. the extracted JSON profile (position `ST`, `max_age` 25 with `age_limit_exclusive: true`, `min_goals` 8, `max_value_m` 25);
-2. the number of players in the CSV (67), the number of validated candidates and a table of them, with a button to download them as CSV;
-3. the final report: a summary and up to three ranked recommendations with rationale, strengths and risks;
-4. an expandable view with the JSON exchanged between agents.
+When the Streamlit application runs correctly, it provides:
 
-**Command line** prints the extracted profile, the number of validated candidates and the report dictionary.
+1. The recruitment request and the structured profile extracted by Agent 1.
+2. The number of records in the dataset, the number of candidates that pass validation, and a table of eligible players. The table can be downloaded as a CSV file.
+3. A final report with up to three recommendations, their ranking, rationale, strengths, and risks or limitations.
+4. An expandable view of the structured information exchanged during the agent workflow.
 
-**No-result case:** for *"a goalkeeper aged 18 with at least 50 goals and a maximum value of 1 million euros"* the system shows a warning that no player satisfies the requirements and generates no recommendations.
+For example, a request for a striker under 25 years old, with at least 8 goals and a maximum value of €25 million should apply the strict age rule (`age < 25`), the minimum-goals rule, and the inclusive maximum-value rule. A player aged exactly 25 must not pass the age condition.
 
-**Tests:** `Ran 17 tests ... OK`.
+For an impossible request, such as a goalkeeper aged at most 18 with at least 50 goals and a maximum value of €1 million, the application should report that no suitable candidate was found and should not invent recommendations.
 
-## Repository structure
+On a CPU-only computer, the first response can take several minutes while the model loads and generates its answer. Later requests may be faster while the model remains loaded.
 
-```
+## 8. Repository structure
+
+```text
 football_scouting_assistant/
-├── app.py                 Streamlit interface
-├── main.py                Command-line entry point
-├── agents.py              Agents 1-3, Ollama client, JSON parsing, request-vs-profile checks, pipeline, logging
-├── scout.py               CSV loading, per-90 indicators and deterministic hard-constraint filter
-├── validator.py           Independent validator of mandatory constraints
-├── data/players.csv       67 fictional players (14 columns)
-├── tests/                 Regression tests (age/budget semantics, hallucinated filters, ranking, no-result case)
-├── requirements.txt       Python dependencies
-├── install_windows.bat    Creates the virtual environment and installs dependencies
-├── run_app.bat            Starts the Streamlit app
-├── agents_execution.log   Audit log of every agent input/output (created at run time)
-└── README.md
+├── app.py                         Streamlit web interface
+├── main.py                        Command-line entry point
+├── agents.py                      Three agent roles, Ollama client, prompts, pipeline and logging
+├── scout.py                       CSV loading, derived statistics and Python pre-filter
+├── validator.py                   Independent validation of mandatory constraints
+├── data/
+│   └── players.csv                67 fictional players (14 fields)
+├── tests/
+│   ├── test_age_constraints.py    Strict and inclusive age tests
+│   ├── test_ranking_consistency.py Canonical ranking and fallback tests
+│   └── test_robustness.py         Budget, hallucination, no-result and robustness tests
+├── requirements.txt               Python dependencies and version ranges
+├── install_windows.bat             Creates the virtual environment and installs dependencies
+├── run_app.bat                     Starts the Streamlit application
+├── .gitignore                      Excludes local environments, logs and temporary files
+└── README.md                       Project documentation
 ```
 
-## Audit and limitations
+`agents_execution.log` is created when the application runs. It records agent inputs and outputs, dropped unsupported constraints, and fallback events. It is excluded from version control because it is a runtime log and may contain user-entered recruitment requests. The local `.venv/` directory and Python cache files should also not be committed.
 
-All agent inputs, outputs, fallback events and dropped constraints are written to `agents_execution.log`. The dataset is fictional and does not represent the real transfer market. The 1.5B model can make extraction or explanation mistakes; the deterministic Python filters and validator are authoritative for mandatory constraints, and human review remains necessary. If Ollama is not running, the pipeline stops with an error message instead of producing a report. Numbers written as words ("twenty million") are not recognised by the request check.
+## 9. Configuration, privacy, and limitations
 
-## Use of generative AI
+The Ollama connection can be configured with these optional environment variables:
 
-(Declare here, and in the report, how generative AI tools were used to write or code this project, as required by the submission guidelines.)
+- `OLLAMA_URL` — Ollama server URL; default: `http://localhost:11434`.
+- `OLLAMA_MODEL` — model name; default: `qwen2.5:1.5b`.
 
+The model runs locally. Recruitment requests and the fictional dataset are sent to the local Ollama service on the same computer, not to a paid cloud API. An internet connection is needed to install Ollama, download the model, and install Python packages; normal model inference is local.
 
-## Version 4.4 — Consistent ranking
+The Qwen 2.5 1.5B model is small and can make mistakes when extracting requirements or writing explanations. Python filtering and validation are authoritative for mandatory constraints, and Python determines the final ranking. The dataset is fictional and limited in size, and it does not contain every metric required for professional scouting. The system should therefore be treated as an educational prototype, and its recommendations should be reviewed by a human. The request parser supports common numeric requirements; numbers written only as words (for example, `twenty million`) may not be recognised reliably.
 
-The validated-candidates table and Recruitment Advisor report now share one
-canonical Python ranking: goal contributions per 90 minutes, followed by
-minutes played (descending). The LLM only supplies explanations for those
-already-ranked players; its generated order cannot change the ranking. If the
-LLM explanation is unavailable, deterministic explanations are shown without
-changing player order.
+If Ollama is not running or the model is unavailable, the application cannot complete the LLM workflow and displays a connection or execution error.
 
-Run automated checks with:
+## 10. Use of generative AI
 
-```powershell
-python -m unittest discover -s tests -v
+ChatGPT (OpenAI) was used as an assistance tool during project development to discuss the system design, draft and revise Python code, diagnose implementation errors, prepare and review tests, and improve the project documentation. The group members are responsible for reviewing the code, running the application and tests, checking the results, and understanding the submitted work. This declaration should be kept consistent with the AI-use declaration in the written report and should be amended if other generative-AI tools were also used.
+
+## 11. Version 4.5 — Ranking consistency
+
+Version 4.5 uses one canonical Python ranking for both the validated-candidates table and the Recruitment Advisor report. The model can explain the selected players but cannot alter their order or replace them. If an LLM explanation is unavailable, deterministic fallback explanations are displayed while the ranking remains unchanged.
+
+The regression suite included in this project was run with:
+
+```text
+Ran 17 tests ... OK
 ```
+
+The tests use a mocked language model for repeatability; they do not replace a separate end-to-end check with Ollama running locally.
