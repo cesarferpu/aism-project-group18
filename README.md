@@ -203,7 +203,7 @@ If Ollama is not running or the model is unavailable, the application cannot com
 
 ## 10. Use of generative AI
 
-ChatGPT (OpenAI) was used as an assistance tool during project development to draft and revise Python code, diagnose implementation errors, prepare and review tests and help us with the referencing. The group members are responsible for reviewing the code, running the application and tests, checking the results, develop the project documentation and understanding the submitted work.
+ChatGPT (OpenAI) was used as an assistance tool during project development to draft and revise Python code, diagnose implementation errors, prepare and review tests and help us with the referencing. The group members are responsible for designing the concept and structure of the project, reviewing the code, running the application and tests, checking the results, develop the project documentation and understanding the submitted work.
 
 ## 11. Version 4.5 — Ranking consistency
 
